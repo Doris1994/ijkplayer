@@ -334,6 +334,13 @@ typedef NS_ENUM(NSInteger, IJKSDLGLViewApplicationState) {
 
 - (void)display: (SDL_VoutOverlay *) overlay
 {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self displayHandler:overlay];
+    });
+}
+
+- (void)displayHandler: (SDL_VoutOverlay *) overlay
+{
     if (_didSetupGL == NO)
         return;
 
