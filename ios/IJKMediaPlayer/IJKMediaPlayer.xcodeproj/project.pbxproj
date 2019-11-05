@@ -6,6 +6,20 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		D8BB57622355AD3C00D3AB98 /* exportFramework */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = D8BB57652355AD3C00D3AB98 /* Build configuration list for PBXAggregateTarget "exportFramework" */;
+			buildPhases = (
+				D8BB57662355ADB900D3AB98 /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = exportFramework;
+			productName = exportFramework;
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		4D32BC811F906E3A00CE9F03 /* IJKSDLGLViewProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 4D32BC801F906E3600CE9F03 /* IJKSDLGLViewProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4D32BC821F906E3B00CE9F03 /* IJKSDLGLViewProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 4D32BC801F906E3600CE9F03 /* IJKSDLGLViewProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1099,9 +1113,17 @@
 		E6903EB117EAF6C500CFD954 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				KnownAssetTags = (
+					New,
+				);
 				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = bilibili;
 				TargetAttributes = {
+					D8BB57622355AD3C00D3AB98 = {
+						CreatedOnToolsVersion = 11.1;
+						DevelopmentTeam = V7HWAX95G6;
+						ProvisioningStyle = Automatic;
+					};
 					E654EA891B6B27E600B0F2D0 = {
 						CreatedOnToolsVersion = 6.4;
 					};
@@ -1115,6 +1137,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = E6903EB017EAF6C500CFD954;
@@ -1125,6 +1148,7 @@
 				E654EA891B6B27E600B0F2D0 /* IJKMediaFramework */,
 				5450AFC11E63EA4300568494 /* IJKMediaFrameworkWithSSL */,
 				E654EA931B6B27E600B0F2D0 /* IJKMediaFrameworkTests */,
+				D8BB57622355AD3C00D3AB98 /* exportFramework */,
 			);
 		};
 /* End PBXProject section */
@@ -1181,6 +1205,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "sh \"${PROJECT_DIR}/../../ijkmedia/ijkplayer/version.sh\" \"${PROJECT_DIR}/../../ijkmedia/ijkplayer\" \"ijkversion.h\"";
+		};
+		D8BB57662355ADB900D3AB98 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to inif [ \"${ACTION}\" = \"build\" ]; then\n\n#要build的target名\nTARGET_SDK_Name=\"IJKMediaFramework\"\necho \"TARGET_SDK_Name=${TARGET_SDK_Name}\"\n\n#build之后的文件夹路径\nbuild_DIR=${SRCROOT}/build\necho \"build_DIR=${build_DIR}\"\n\n#真机build生成的头文件的文件夹路径\nDEVICE_DIR_INCLUDE=${build_DIR}/Release-iphoneos/include/${TARGET_SDK_Name}\necho \"DEVICE_DIR_INCLUDE=${DEVICE_DIR_INCLUDE}\"\n\n#真机build生成的framework文件路径\nDEVICE_DIR_FRAMEWORK=${build_DIR}/Release-iphoneos/${TARGET_SDK_Name}.framework\necho \"DEVICE_DIR_FRAMEWORK=${DEVICE_DIR_FRAMEWORK}\"\n\n#模拟器build生成的framework文件路径\nSIMULATOR_DIR_FRAMEWORK=${build_DIR}/Release-iphonesimulator/${TARGET_SDK_Name}.framework\necho \"SIMULATOR_DIR_FRAMEWORK=${SIMULATOR_DIR_FRAMEWORK}\"\n\n#目标文件夹路径\nINSTALL_DIR=${SRCROOT}/Products/${TARGET_SDK_Name}\necho \"INSTALL_DIR=${INSTALL_DIR}\"\n\n#目标framework路径\nINSTALL_DIR_FRAMEWORK=${SRCROOT}/Products/${TARGET_SDK_Name}/${TARGET_SDK_Name}.framework\nsert its path.\n#判断目标文件夹是否存在，存在则删除该文件夹\nif [ -d \"${INSTALL_DIR}\" ]; then\n    rm -rf \"${INSTALL_DIR}\"\nfi\n#创建目标文件夹\nmkdir -p \"${INSTALL_DIR}\"\n\n#build之前clean一下\nxcodebuild -target ${TARGET_SDK_Name} clean\n\n#模拟器build\nxcodebuild -target ${TARGET_SDK_Name} -configuration Release -sdk iphonesimulator\n\n#真机build\nxcodebuild -target ${TARGET_SDK_Name} -configuration Release -sdk iphoneos\n\n#复制头文件到目标文件夹\n#cp -R \"${DEVICE_DIR_INCLUDE}\" \"${INSTALL_DIR_Headers}\"\ncp -R \"${DEVICE_DIR_FRAMEWORK}\" \"${INSTALL_DIR_FRAMEWORK}\"\n\n#合成模拟器和真机framework包\nlipo -create \"${DEVICE_DIR_FRAMEWORK}/${TARGET_SDK_Name}\" \"${SIMULATOR_DIR_FRAMEWORK}/${TARGET_SDK_Name}\" -output \"${INSTALL_DIR_FRAMEWORK}/${TARGET_SDK_Name}\"\n\n#打开目标文件夹\nopen \"${INSTALL_DIR}\"\n#判断build文件夹是否存在，存在则删除\n    if [ -d \"${build_DIR}\" ]; then\n        rm -rf \"${build_DIR}\"\n    fi\n\nfi\n\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1492,6 +1533,24 @@
 			};
 			name = Release;
 		};
+		D8BB57632355AD3C00D3AB98 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = V7HWAX95G6;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		D8BB57642355AD3C00D3AB98 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = V7HWAX95G6;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		E654EA9D1B6B27E600B0F2D0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1729,6 +1788,15 @@
 			buildConfigurations = (
 				5450B0411E63EA4300568494 /* Debug */,
 				5450B0421E63EA4300568494 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D8BB57652355AD3C00D3AB98 /* Build configuration list for PBXAggregateTarget "exportFramework" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D8BB57632355AD3C00D3AB98 /* Debug */,
+				D8BB57642355AD3C00D3AB98 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

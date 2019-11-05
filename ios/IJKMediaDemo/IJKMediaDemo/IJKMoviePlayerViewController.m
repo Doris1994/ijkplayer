@@ -64,17 +64,57 @@
 
 #ifdef DEBUG
     [IJKFFMoviePlayerController setLogReport:YES];
-    [IJKFFMoviePlayerController setLogLevel:k_IJK_LOG_DEBUG];
+    [IJKFFMoviePlayerController setLogLevel:k_IJK_LOG_DEFAULT];
 #else
     [IJKFFMoviePlayerController setLogReport:NO];
     [IJKFFMoviePlayerController setLogLevel:k_IJK_LOG_INFO];
 #endif
 
-    [IJKFFMoviePlayerController checkIfFFmpegVersionMatch:YES];
+    // [IJKFFMoviePlayerController checkIfFFmpegVersionMatch:YES];
     // [IJKFFMoviePlayerController checkIfPlayerVersionMatch:YES major:1 minor:0 micro:0];
-
-    IJKFFOptions *options = [IJKFFOptions optionsByDefault];
-
+ 
+    IJKFFOptions * options = [IJKFFOptions optionsByDefault];
+     [options setPlayerOptionIntValue:1 forKey:@"enable-accurate-seek"];
+    // 帧速率（fps）可以改，确认非标准帧率会导致音画不同步，所以只能设定为15或者29.97）
+    [options setPlayerOptionIntValue:29.97 forKey:@"r"];
+    // 设置音量大小，256为标准音量。（要设置成两倍音量时则输入512，依此类推)
+    [options setPlayerOptionIntValue:512 forKey:@"vol"];
+    //静音设置
+    //[options setPlayerOptionValue:@"1" forKey:@"an"];
+    // 最大fps
+    [options setPlayerOptionIntValue:30 forKey:@"max-fps"];
+    // 跳帧开关 5
+    [options setPlayerOptionIntValue:1 forKey:@"framedrop"];
+    // 开启硬编码 （默认是 0 ：软解）
+    [options setPlayerOptionIntValue:1 forKey:@"videotoolbox"];
+    // 指定最大宽度
+    [options setPlayerOptionIntValue:1920 forKey:@"videotoolbox-max-frame-width"];
+     // 自动转屏开关
+    [options setFormatOptionIntValue:0 forKey:@"auto_convert"];
+    // 重连开启 BOOL
+    [options setFormatOptionIntValue:1 forKey:@"reconnect"];
+    // 超时时间，timeout参数只对http设置有效，若果你用rtmp设置timeout，ijkplayer内部会忽略timeout参数。rtmp的timeout参数含义和http的不一样。
+    //[options setFormatOptionIntValue:30 * 1000 * 1000 forKey:@"timeout"];
+    // 如果使用rtsp协议，可以优先用tcp（默认udp）
+    //[options setFormatOptionValue:@"tcp" forKey:@"rtsp_transport"];
+    //播放前的探测Size，默认是1M, 改小一点会出画面更快
+    [options setFormatOptionIntValue:1024 * 1 forKey:@"probesize"];
+    [options setFormatOptionIntValue:1024 * 3 forKey:@"max-buffer-size"];
+    [options setFormatOptionIntValue:1 forKey:@"analyzeduration"];
+    //开启环路滤波（0比48清楚，但解码开销大，48基本没有开启环路滤波，清晰度低，解码开销小）
+    [options setCodecOptionIntValue:IJK_AVDISCARD_DEFAULT forKey:@"skip_loop_filter"];
+    [options setCodecOptionIntValue:IJK_AVDISCARD_DEFAULT forKey:@"skip_frame"];
+    
+    // param for living
+     // 最大缓存大小是100毫秒，可以依据自己的需求修改
+    [options setPlayerOptionIntValue:1000 forKey:@"max_cached_duration"];
+     // 无限读
+    [options setPlayerOptionIntValue:1 forKey:@"infbuf"];
+    //  关闭播放器缓冲 (如果频繁卡顿，可以保留缓冲区，不设置默认为1)
+   // [options setPlayerOptionIntValue:0 forKey:@"packet-buffering"];
+    
+    //[options setPlayerOptionIntValue:1 forKey:@"no-time-adjust"];
+    options.showHudView = YES;
     self.player = [[IJKFFMoviePlayerController alloc] initWithContentURL:self.url withOptions:options];
     self.player.view.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
     self.player.view.frame = self.view.bounds;
