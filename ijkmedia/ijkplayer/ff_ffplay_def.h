@@ -290,7 +290,12 @@ typedef struct VideoState {
 #endif
     AVFormatContext *ic;
     int realtime;
-
+    
+    // Add by ljsdaya
+    // for low delay time with live play(realtime), control videoq/audioq duration < max_cached_duration
+    // realtime set to 0, max_cached_duration = 0 means is playback
+    int max_cached_duration;
+   
     Clock audclk;
     Clock vidclk;
     Clock extclk;
