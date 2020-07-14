@@ -103,6 +103,8 @@ static GLboolean yuv420sp_vtb_uploadTexture(IJK_GLES2_Renderer *renderer, SDL_Vo
         return GL_FALSE;
     }
 
+    CVPixelBufferLockBaseAddress(pixel_buffer, 0);
+
     CFTypeRef color_attachments = CVBufferGetAttachment(pixel_buffer, kCVImageBufferYCbCrMatrixKey, NULL);
     if (color_attachments != opaque->color_attachments) {
         if (color_attachments == nil) {
@@ -170,7 +172,8 @@ static GLboolean yuv420sp_vtb_uploadTexture(IJK_GLES2_Renderer *renderer, SDL_Vo
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
+    
+    CVPixelBufferUnlockBaseAddress(pixel_buffer, 0);
 
     return GL_TRUE;
 }
